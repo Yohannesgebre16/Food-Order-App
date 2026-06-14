@@ -1,29 +1,64 @@
-import { createContex , useState , useContext } from "react";
+import {createContext , useContext , useState } from 'react'
 
-const Cartcontexts = createContext()
+const CartContext = createContext()
 
 export function CartProvider({children}) {
-    const [count ,setCount] = useState(0)
+    const [cartItems , setCartItems] = useState([])
 
-    const increment = ()=>{
-        setCount(prev => prev+1)
+    //addtocart
+
+    const addToCart = (item)=>{
+        setCartItems((prevItems)=>{
+            const existingItem = prevItems.find((cartItem)=>cartItem.id === item.id)
+            if(existingItem) {
+                return prevItems.map((cartItem)=>
+                cartItem.id === item.id
+                ?{...cartItem, quantity:cartItem.quantity + 1
+
+                }
+                :cartItems
+                )
+            }
+            return [...prevItems ,{...item , quantity:1}]
+        })
     }
-    const decrement = ()=> {
-        setCount(prev => prev-1)
+
+
+    // removetocart 
+
+    const removeFromCart = (itemId)=> {
+        setCartItems((prevItems)=>{
+            const existingItem = prevItems.find((cartItem)=> cartItem.id === itemId)
+
+            if(existingItem.quantity === 1){
+                return prevItems.filter((cartItem)=> cartItem.id !== itemId)
+            }
+            return prevItems.map((cartItem)=>
+            cartItem.id === itemId
+            ?{...cartItem , quantity: cartItem.quantity -1}
+            :cartItem
+            )
+        })
     }
-      
-   return(
-    <Cartcontext.Provider values={{count , increment ,decrement}}>
-           {children}
-    </Cartcontext.Provider>
-   )
+
+    // calculate total price dynamically 
+
+    const totalPrice = cartItems.reduce(
+        (total , item)=> total + item.price * item.quantity,
+        0
+    )
+    return(
+        <CartContext.Provider value={{cartItems , addToCart , removeFromCart , totalPrice}}>
+            {children}
+        </CartContext.Provider>
+    )
 }
 
-//Custom Hook 
+//Custom hook 
 
 export const useCart = ()=>{
-    const context = useContext(Cartcontexts)
-    if(!context){
+    const context = useContext(CartContext)
+    if(!context) {
         throw new Error("useCart must be used within CartProvider")
     }
     return context;
