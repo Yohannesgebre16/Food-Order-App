@@ -7,21 +7,21 @@ export function CartProvider({children}) {
 
     //addtocart
 
-    const addToCart = (item)=>{
-        setCartItems((prevItems)=>{
-            const existingItem = prevItems.find((cartItem)=>cartItem.id === item.id)
-            if(existingItem) {
-                return prevItems.map((cartItem)=>
-                cartItem.id === item.id
-                ?{...cartItem, quantity:cartItem.quantity + 1
+    const addToCart = (newItem) => {
+    setCartItems((prevItems) => {
+    const existingItem = prevItems.find((item) => item.id === newItem.id);
 
-                }
-                :cartItems
-                )
-            }
-            return [...prevItems ,{...item , quantity:1}]
-        })
+    if (existingItem) {
+      return prevItems.map((item) =>
+        item.id === newItem.id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      );
     }
+
+    return [...prevItems, { ...newItem, quantity: 1 }];
+  });
+};
 
 
     // removetocart 
