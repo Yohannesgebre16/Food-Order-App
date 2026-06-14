@@ -1,7 +1,9 @@
 import CartModal from "./CartModal.jsx"
 import {useState} from "react"
+import { useCart } from "../Contexts/CartContext.jsx"
 export default function ProductCard({item}) {
     const [isclick , setIsClick] = useState(false)
+    const {addToCart} = useCart()
     return(
         <div className="bg-white rounded-3xl shadow-md">
 
@@ -25,7 +27,11 @@ export default function ProductCard({item}) {
 
                 <button
                 className='w-full mt-auto py-2.5 px-5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-semibold'
-                onClick={()=> setIsClick(true)}
+                onClick={()=> {
+                    setIsClick(true)
+                    addToCart(item)
+                }}
+
                 >Add to cart</button>
             </div>
 
