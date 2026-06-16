@@ -1,7 +1,7 @@
 import { createPortal } from "react-dom";
 import { useCart } from "../Contexts/CartContext.jsx";
 
-export default function CartModal({ children, isClicked, onClose }) {
+export default function CartModal({ children, isClicked, onClose , onCheckout }) {
   if (!isClicked) return null;
 
   const { cartItems, addToCart, removeFromCart, totalPrice } = useCart();
@@ -80,9 +80,9 @@ export default function CartModal({ children, isClicked, onClose }) {
               type="button"
               disabled={cartItems.length === 0}
               className="px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 disabled:bg-gray-200 disabled:cursor-not-allowed text-white font-bold text-sm active:scale-95 transition-all shadow-md shadow-amber-500/10"
-              onClick={() => alert("Proceeding to checkout form...")}
+              onClick={onCheckout}
             >
-              Submit Order
+              Go to checkout
             </button>
           </div>
         </div>
